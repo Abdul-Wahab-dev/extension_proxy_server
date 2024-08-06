@@ -16,19 +16,20 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   "/",
-  (req, res, next) => {
-    req.headers.origin = "https://proxy.toolefy.com";
-  },
   proxy("https://flexisaves.toolefy.com", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      console.log(proxyReqOpts.headers, "proxy headers");
-      console.log(srcReq.headers, "origin headers");
-
-      proxyReqOpts.headers["origin"] = "https://proxy.toolefy.com";
+      proxyReqOpts.headers["origin"] = srcReq.headers["origin"];
       return proxyReqOpts;
     },
     proxyReqPathResolver: function (req) {
       return req.originalUrl;
+    },
+    userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
+      if (proxyRes.statusCode === 301 || proxyRes.statusCode === 302) {
+        userRes.status(proxyRes.statusCode).redirect(proxyRes.headers.location);
+      } else {
+        return proxyResData;
+      }
     },
   })
 );
