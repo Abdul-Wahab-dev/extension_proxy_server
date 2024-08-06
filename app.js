@@ -20,7 +20,7 @@ app.use(
     console.log(req.headers);
     next();
   },
-  proxy("http://flexisaves.toolefy.com")
+  proxy("https://flexisaves.toolefy.com")
 );
 
 app.listen(3001, () => {
