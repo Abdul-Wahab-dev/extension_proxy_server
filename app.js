@@ -16,6 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   "/",
+  (req, res, next) => {
+    req.headers.origin = "https://proxy.toolefy.com";
+  },
   proxy("https://flexisaves.toolefy.com", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       console.log(proxyReqOpts.headers, "proxy headers");
