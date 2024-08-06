@@ -20,8 +20,8 @@ app.use(
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       console.log(proxyReqOpts.headers, "proxy headers");
       console.log(srcReq.headers, "origin headers");
-      if (srcReq.headers["origin"])
-        proxyReqOpts.headers["origin"] = srcReq.headers["origin"];
+
+      proxyReqOpts.headers["origin"] = "https://proxy.toolefy.com";
       return proxyReqOpts;
     },
     proxyReqPathResolver: function (req) {
