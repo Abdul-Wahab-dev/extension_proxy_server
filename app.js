@@ -16,11 +16,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   "/",
-  (req, res, next) => {
-    console.log(req.headers);
-    next();
-  },
-  proxy("https://flexisaves.toolefy.com")
+  proxy("https://flexisaves.toolefy.com", {
+    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+      console.log(proxyReqOpts.headers, "proxy headers");
+      console.log(srcReq.headers, "origin headers");
+      if (srcReq.headers["origin"])
+        proxyReqOpts.headers["origin"] = srcReq.headers["origin"];
+      return proxyReqOpts;
+    },
+    proxyReqPathResolver: function (req) {
+      return req.originalUrl;
+    },
+  })
 );
 
 app.listen(3001, () => {
