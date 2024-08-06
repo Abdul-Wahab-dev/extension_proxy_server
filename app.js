@@ -17,19 +17,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   "/",
   proxy("https://flexisaves.toolefy.com", {
-    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      proxyReqOpts.headers["origin"] = srcReq.headers["origin"];
-      return proxyReqOpts;
-    },
-    proxyReqPathResolver: function (req) {
-      return req.originalUrl;
-    },
-    userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
-      if (proxyRes.statusCode === 301 || proxyRes.statusCode === 302) {
-        userRes.status(proxyRes.statusCode).redirect(proxyRes.headers.location);
-      } else {
-        return proxyResData;
-      }
+    // userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
+    //   if (proxyRes.statusCode === 301 || proxyRes.statusCode === 302) {
+    //     userRes.status(proxyRes.statusCode).redirect(proxyRes.headers.location);
+    //   } else {
+    //     return proxyResData;
+    //   }
+    // },
+    userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
+      // recieves an Object of headers, returns an Object of headers.
+      headers["origin"] = "https://proxy.toolefy.com";
+      return headers;
     },
   })
 );
